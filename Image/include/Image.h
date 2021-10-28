@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <memory>
+#include <string>
 
 struct RGBA
 {
@@ -19,7 +21,7 @@ struct RGBA
   };
   
   RGBA()=default;
-  RGBA(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a) :
+  RGBA(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a) : 
     r{_r}, g{_g}, b{_b}, a{_a} {}
 
 };
@@ -27,12 +29,20 @@ struct RGBA
 class Image
 {
     public :
-        size_t width() const ;
-        size_t height() const ;
+      Image()=default;
+      Image(size_t _w, size_t _h);
+      Image(size_t _w, size_t _h, unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a);
+
+      size_t width() const ;
+      size_t height() const ;
+      RGBA getPixel(size_t _w, size_t _h);
+      bool write(const std::string &_fname) const;
+      void setPixel(size_t _x, size_t _y, RGBA _p);
 
     private :
-        size_t m_width=0;
-        size_t m_height=0;
+      size_t m_width=0;
+      size_t m_height=0;
+      std::unique_ptr<RGBA []> m_pixels;
 
 };
 
