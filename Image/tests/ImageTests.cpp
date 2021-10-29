@@ -57,8 +57,8 @@ TEST(IMAGE, userctorColour)
         {
             auto pixel = img.getPixel(x,y);
             ASSERT_EQ(pixel.r,255);
-            ASSERT_EQ(pixel.b,0);
             ASSERT_EQ(pixel.g,0);
+            ASSERT_EQ(pixel.b,0);
             ASSERT_EQ(pixel.a,255);
         }
     }
@@ -70,15 +70,56 @@ TEST(IMAGE, writeToFile)
     ASSERT_TRUE(img.write("test.exr"));
 }
 
+// TEST(IMAGE, setPixel)
+// {
+//     Image img(100,100,255,255,255,255);
+//     for(int i=0; i<img.width(); ++i)
+//     {
+//         img.setPixel(i,30,{0,0,255,255});
+//         img.setPixel(i,31,{0,0,255,255});
+//         img.setPixel(i,32,{0,0,255,255});
+//         img.setPixel(i,33,{0,0,255,255});
+//     }
+//     img.write("test2.exr");
+// }
+
 TEST(IMAGE, setPixel)
 {
     Image img(100,100,255,255,255,255);
     for(int i=0; i<img.width(); ++i)
     {
-        img.setPixel(i,30,{0,0,255,255});
-        img.setPixel(i,31,{0,0,255,255});
-        img.setPixel(i,32,{0,0,255,255});
-        img.setPixel(i,33,{0,0,255,255});
+        for(int j=30; j<34; ++j)
+        {
+            img.setPixel(i,j,{100,0,255,255});
+        }
     }
-    img.write("test2.exr");
+    for(int i=0; i<img.width(); ++i)
+    {
+        for(int j=30; j<34; ++j)
+        {
+            auto pixel = img.getPixel(i,j);
+            ASSERT_EQ(pixel.r,100);
+            ASSERT_EQ(pixel.g,0);
+            ASSERT_EQ(pixel.b,255);
+            ASSERT_EQ(pixel.a,255);
+        }
+    }
+
+}
+
+TEST(Image,clear)
+{
+    Image img(1024, 720, 205, 30, 100, 53);
+    img.clear();
+    for(size_t y=0; y<img.height(); ++y)
+    {
+        for(size_t x=0; x<img.width(); ++x)
+        {
+            auto pixel = img.getPixel(x,y);
+            ASSERT_EQ(pixel.r,0);
+            ASSERT_EQ(pixel.b,0);
+            ASSERT_EQ(pixel.g,0);
+            ASSERT_EQ(pixel.a,255);
+        }
+    } 
 }

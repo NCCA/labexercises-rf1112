@@ -38,6 +38,7 @@ class Image
       RGBA getPixel(size_t _w, size_t _h);
       bool write(const std::string &_fname) const;
       void setPixel(size_t _x, size_t _y, RGBA _p);
+      void clear();
 
     private :
       size_t m_width=0;

@@ -54,3 +54,10 @@ void Image::setPixel(size_t _x, size_t _y, RGBA _p)
 {
     m_pixels[_y*m_height+_x] = _p;
 }
+
+void Image::clear()
+{
+    RGBA p(0,0,0,255);
+    for(size_t i=0; i<m_width*m_height; ++i)
+        m_pixels[i] = p;    
+}
