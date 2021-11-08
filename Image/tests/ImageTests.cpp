@@ -90,7 +90,7 @@ TEST(IMAGE, setPixel)
     {
         for(int j=30; j<34; ++j)
         {
-            img.setPixel(i,j,{100,0,255,255});
+            img.setPixel(i,j,{100,0,43,54});
         }
     }
     for(int i=0; i<img.width(); ++i)
@@ -100,14 +100,37 @@ TEST(IMAGE, setPixel)
             auto pixel = img.getPixel(i,j);
             ASSERT_EQ(pixel.r,100);
             ASSERT_EQ(pixel.g,0);
-            ASSERT_EQ(pixel.b,255);
-            ASSERT_EQ(pixel.a,255);
+            ASSERT_EQ(pixel.b,43);
+            ASSERT_EQ(pixel.a,54);
         }
     }
-
 }
 
-TEST(Image,clear)
+TEST(IMAGE, setPixelRGBA)
+{
+    Image img(100,100,255,255,255,255);
+    for(int i=0; i<img.width(); ++i)
+    {
+        for(int j=30; j<34; ++j)
+        {
+            img.setPixel(i,j,100,0,43,54);
+        }
+    }
+    for(int i=0; i<img.width(); ++i)
+    {
+        for(int j=30; j<34; ++j)
+        {
+            auto pixel = img.getPixel(i,j);
+            ASSERT_EQ(pixel.r,100);
+            ASSERT_EQ(pixel.g,0);
+            ASSERT_EQ(pixel.b,43);
+            ASSERT_EQ(pixel.a,54);
+        }
+    }
+}
+
+
+TEST(Image, clear)
 {
     Image img(1024, 720, 205, 30, 100, 53);
     img.clear();
