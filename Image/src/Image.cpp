@@ -71,8 +71,8 @@ void Image::clear()
 
 void Image::line(int _sx, int _sy, int _ex, int _ey, unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
 {
-    if(_sx < m_width && _sy < m_height)
-    {
+    // if(_sx < m_width && _sy < m_height)
+    // {
         if(_ex > m_width)
             _ex = m_width;
         if(_ey > m_height)
@@ -86,5 +86,42 @@ void Image::line(int _sx, int _sy, int _ex, int _ey, unsigned char _r, unsigned 
                 m_pixels[j*m_width+i] = p;
             }
         }
+    // }
+}
+
+void Image::rectangle(int _tx, int _ty, int _bx, int _by, unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
+{
+    if(_bx > m_width)
+        _bx = m_width;
+    if(_by > m_height)
+        _by = m_height;
+        
+    RGBA p(_r,_g,_b,_a);
+    for (int i=_tx; i<_bx; ++i)
+    {
+        for (int j=_ty; j<_by; ++j)
+        {
+            m_pixels[j*m_width+i] = p;
+        }
+    }
+}
+
+void Image::rectangleNonFill(int _tx, int _ty, int _bx, int _by, unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
+{
+    if(_bx > m_width)
+        _bx = m_width;
+    if(_by > m_height)
+        _by = m_height;
+        
+    RGBA p(_r,_g,_b,_a);
+    for (int i=_tx; i<_bx; ++i)
+    {
+        m_pixels[_ty*m_width+i] = p;
+        m_pixels[(_by-1)*m_width+i] = p;
+    }
+    for (int j=_ty; j<_by; ++j)
+    {
+        m_pixels[j*m_width+_tx] = p;
+        m_pixels[j*m_width+(_bx-1)] = p;
     }
 }

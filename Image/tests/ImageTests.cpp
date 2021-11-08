@@ -147,7 +147,7 @@ TEST(Image, clear)
     } 
 }
 
-TEST(IMAGE,lineHorizontal)
+TEST(IMAGE, lineHorizontal)
 {
     Image a(200,200);
 
@@ -164,7 +164,7 @@ TEST(IMAGE,lineHorizontal)
     ASSERT_TRUE(a.write("lineh.exr"));
 }
 
-TEST(IMAGE,lineVertical)
+TEST(IMAGE, lineVertical)
 {
     Image a(200,200);
 
@@ -181,7 +181,7 @@ TEST(IMAGE,lineVertical)
     ASSERT_TRUE(a.write("linev.exr"));
 }
 
-TEST(IMAGE,lineHorizontalOutOfRange)
+TEST(IMAGE, lineHorizontalOutOfRange)
 {
     Image a(200,200);
 
@@ -204,7 +204,7 @@ TEST(IMAGE,lineHorizontalOutOfRange)
     ASSERT_TRUE(a.write("lineho.exr"));
 }
 
-TEST(IMAGE,lineVerticalOutOfRange)
+TEST(IMAGE, lineVerticalOutOfRange)
 {
     Image a(200,200);
 
@@ -227,7 +227,7 @@ TEST(IMAGE,lineVerticalOutOfRange)
     ASSERT_TRUE(a.write("linevo.exr"));
 }
 
-TEST(IMAGE,lineOutOfRange)
+TEST(IMAGE, lineOutOfRange)
 {
     Image a(200,200);
     a.line(100,200,101,500,255,0,0,255);
@@ -242,4 +242,107 @@ TEST(IMAGE,lineOutOfRange)
             ASSERT_EQ(pixel.a,255);
         }
     }
+    ASSERT_TRUE(a.write("lineo.exr"));
+}
+
+TEST(IMAGE, rectangle)
+{
+    Image a(200,200);
+    a.rectangle(30,50,120,150,255,0,0,255);
+    for(int i=30; i<120; ++i)
+    {
+        for(int j=50; j<150; ++j)
+        {
+            auto pixel = a.getPixel(i,j);
+            ASSERT_EQ(pixel.r,255);
+            ASSERT_EQ(pixel.b,0);
+            ASSERT_EQ(pixel.g,0);
+            ASSERT_EQ(pixel.a,255);
+        }
+    }
+    ASSERT_TRUE(a.write("rect.exr"));
+}
+
+TEST(IMAGE, rectangleOutOfRange)
+{
+    Image a(200,200);
+    a.rectangle(30,50,220,250,255,0,0,255);
+    for(int i=30; i<200; ++i)
+    {
+        for(int j=50; j<200; ++j)
+        {
+            auto pixel = a.getPixel(i,j);
+            ASSERT_EQ(pixel.r,255);
+            ASSERT_EQ(pixel.b,0);
+            ASSERT_EQ(pixel.g,0);
+            ASSERT_EQ(pixel.a,255);
+        }
+    }
+    ASSERT_TRUE(a.write("recto.exr"));
+}
+
+TEST(IMAGE, rectangleNonFill)
+{
+    Image a(200,200);
+    a.rectangleNonFill(30,50,120,150,255,0,0,255);
+    for(int i=30; i<120; ++i)
+    {
+        auto pixel = a.getPixel(i,50);
+        ASSERT_EQ(pixel.r,255);
+        ASSERT_EQ(pixel.b,0);
+        ASSERT_EQ(pixel.g,0);
+        ASSERT_EQ(pixel.a,255);
+        auto pixel2 = a.getPixel(i,149);
+        ASSERT_EQ(pixel2.r,255);
+        ASSERT_EQ(pixel2.b,0);
+        ASSERT_EQ(pixel2.g,0);
+        ASSERT_EQ(pixel2.a,255);        
+    }
+    for(int j=50; j<150; ++j)
+    {
+        auto pixel = a.getPixel(30,j);
+        ASSERT_EQ(pixel.r,255);
+        ASSERT_EQ(pixel.b,0);
+        ASSERT_EQ(pixel.g,0);
+        ASSERT_EQ(pixel.a,255);
+        auto pixel2 = a.getPixel(119,j);
+        ASSERT_EQ(pixel2.r,255);
+        ASSERT_EQ(pixel2.b,0);
+        ASSERT_EQ(pixel2.g,0);
+        ASSERT_EQ(pixel2.a,255);        
+    }
+    ASSERT_TRUE(a.write("rectNonFill.exr"));
+}
+
+TEST(IMAGE, rectangleNonFillOutOfRange)
+{
+    Image a(200,200);
+    a.rectangleNonFill(30,50,220,250,255,0,0,255);
+    for(int i=30; i<200; ++i)
+    {
+        auto pixel = a.getPixel(i,50);
+        ASSERT_EQ(pixel.r,255);
+        ASSERT_EQ(pixel.b,0);
+        ASSERT_EQ(pixel.g,0);
+        ASSERT_EQ(pixel.a,255);
+        auto pixel2 = a.getPixel(i,199);
+        ASSERT_EQ(pixel2.r,255);
+        ASSERT_EQ(pixel2.b,0);
+        ASSERT_EQ(pixel2.g,0);
+        ASSERT_EQ(pixel2.a,255);        
+    }
+    for(int j=50; j<200; ++j)
+    {
+        auto pixel = a.getPixel(30,j);
+        ASSERT_EQ(pixel.r,255);
+        ASSERT_EQ(pixel.b,0);
+        ASSERT_EQ(pixel.g,0);
+        ASSERT_EQ(pixel.a,255);
+        auto pixel2 = a.getPixel(199,j);
+        ASSERT_EQ(pixel2.r,255);
+        ASSERT_EQ(pixel2.b,0);
+        ASSERT_EQ(pixel2.g,0);
+        ASSERT_EQ(pixel2.a,255);        
+    }
+    ASSERT_TRUE(a.write("rectNonFillo.exr"));
 }
