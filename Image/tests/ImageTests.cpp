@@ -72,13 +72,13 @@ TEST(IMAGE, writeToFile)
 
 // TEST(IMAGE, setPixel)
 // {
-//     Image img(100,100,255,255,255,255);
+//     Image img(300,100,255,255,255,255);
 //     for(int i=0; i<img.width(); ++i)
 //     {
 //         img.setPixel(i,30,{0,0,255,255});
-//         img.setPixel(i,31,{0,0,255,255});
-//         img.setPixel(i,32,{0,0,255,255});
-//         img.setPixel(i,33,{0,0,255,255});
+//         img.setPixel(i,31,{0,255,0,255});
+//         img.setPixel(i,32,{255,0,0,255});
+//         img.setPixel(i,33,{0,0,0,255});
 //     }
 //     img.write("test2.exr");
 // }
@@ -145,4 +145,101 @@ TEST(Image, clear)
             ASSERT_EQ(pixel.a,255);
         }
     } 
+}
+
+TEST(IMAGE,lineHorizontal)
+{
+    Image a(200,200);
+
+    a.line(0,100,200,101,255,0,0,255);
+    RGBA p;
+    for(size_t x=0; x<a.width(); ++x)
+    {
+        p=a.getPixel(x,100);
+        ASSERT_EQ(p.r,255);
+        ASSERT_EQ(p.g,0);
+        ASSERT_EQ(p.b,0);
+        ASSERT_EQ(p.a,255);
+    }
+    ASSERT_TRUE(a.write("lineh.exr"));
+}
+
+TEST(IMAGE,lineVertical)
+{
+    Image a(200,200);
+
+    a.line(100,0,101,200,255,0,0,255);
+    RGBA p;
+    for(size_t y=0; y<a.height(); ++y)
+    {
+        p=a.getPixel(100,y);
+        ASSERT_EQ(p.r,255);
+        ASSERT_EQ(p.g,0);
+        ASSERT_EQ(p.b,0);
+        ASSERT_EQ(p.a,255);
+    }
+    ASSERT_TRUE(a.write("linev.exr"));
+}
+
+TEST(IMAGE,lineHorizontalOutOfRange)
+{
+    Image a(200,200);
+
+    a.line(0,100,300,101,255,0,0,255);
+    RGBA p;
+    for(size_t x=0; x<a.width(); ++x)
+    {
+        p=a.getPixel(x,100);
+        ASSERT_EQ(p.r,255);
+        ASSERT_EQ(p.g,0);
+        ASSERT_EQ(p.b,0);
+        ASSERT_EQ(p.a,255);
+        
+        p=a.getPixel(x,101);
+        ASSERT_EQ(p.r,0);
+        ASSERT_EQ(p.g,0);
+        ASSERT_EQ(p.b,0);
+        ASSERT_EQ(p.a,255);
+    }
+    ASSERT_TRUE(a.write("lineho.exr"));
+}
+
+TEST(IMAGE,lineVerticalOutOfRange)
+{
+    Image a(200,200);
+
+    a.line(100,0,101,500,255,0,0,255);
+    RGBA p;
+    for(size_t y=0; y<a.height(); ++y)
+    {
+        p=a.getPixel(100,y);
+        ASSERT_EQ(p.r,255);
+        ASSERT_EQ(p.g,0);
+        ASSERT_EQ(p.b,0);
+        ASSERT_EQ(p.a,255);
+        
+        p=a.getPixel(101,y);
+        ASSERT_EQ(p.r,0);
+        ASSERT_EQ(p.g,0);
+        ASSERT_EQ(p.b,0);
+        ASSERT_EQ(p.a,255);
+    }
+    ASSERT_TRUE(a.write("linevo.exr"));
+}
+
+TEST(IMAGE,lineOutOfRange)
+{
+    Image a(200,200);
+    a.line(100,200,101,500,255,0,0,255);
+    for(size_t y=0; y<a.height(); ++y)
+    {
+        for(size_t x=0; x<a.width(); ++x)
+        {
+            auto pixel = a.getPixel(x,y);
+            ASSERT_EQ(pixel.r,0);
+            ASSERT_EQ(pixel.b,0);
+            ASSERT_EQ(pixel.g,0);
+            ASSERT_EQ(pixel.a,255);
+        }
+    }
 }

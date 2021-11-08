@@ -20,7 +20,7 @@ Image::Image(size_t _w, size_t _h, unsigned char _r, unsigned char _g, unsigned 
 
 RGBA Image::getPixel(size_t _x, size_t _y)
 {
-    return m_pixels[_y*m_height+_x];
+    return m_pixels[_y*m_width+_x];
 }
 
 size_t Image::width() const
@@ -52,14 +52,14 @@ bool Image::write(const std::string &_fname) const
 
 void Image::setPixel(size_t _x, size_t _y, RGBA _p)
 {
-    m_pixels[_y*m_height+_x] = _p;
+    m_pixels[_y*m_width+_x] = _p;
 }
 
 
 void Image::setPixel(size_t _x, size_t _y, unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
 {
     RGBA p(_r,_g,_b,_a);
-    m_pixels[_y*m_height+_x] = p;
+    m_pixels[_y*m_width+_x] = p;
 }
 
 void Image::clear()
@@ -67,4 +67,24 @@ void Image::clear()
     RGBA p(0,0,0,255);
     for(size_t i=0; i<m_width*m_height; ++i)
         m_pixels[i] = p;    
+}
+
+void Image::line(int _sx, int _sy, int _ex, int _ey, unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
+{
+    if(_sx < m_width && _sy < m_height)
+    {
+        if(_ex > m_width)
+            _ex = m_width;
+        if(_ey > m_height)
+            _ey = m_height;
+        
+        RGBA p(_r,_g,_b,_a);
+        for(int i=_sx; i<_ex; ++i)
+        {
+            for(int j=_sy; j<_ey; ++j)
+            {
+                m_pixels[j*m_width+i] = p;
+            }
+        }
+    }
 }
