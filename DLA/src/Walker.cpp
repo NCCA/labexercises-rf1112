@@ -35,10 +35,26 @@ void Walker::randomImageSeed()
 
 bool Walker::walk()
 {
-    // while walking
-    // check out of range -> exit (return false)
-    // if found set colour
-    return true;
+    while (m_xpos>0 && m_xpos<m_map->width() && m_ypos>0 && m_ypos<m_map->height())
+    {
+        // std::cout<<"Walk "<<m_xpos<<' '<<m_ypos<<'\n';
+        for(int i=-1; i<=1; ++i)
+        {
+            for(int j=-1; j<=1; ++j)
+            {
+                if(m_map->getPixel(m_xpos+i, m_ypos+j).a == 255)
+                {
+                    std::cout<<"Set Pixel "<<m_xpos<<' '<<m_ypos<<'\n';
+                    m_map->setPixel(m_xpos, m_ypos, 0, 0, 0, 255);
+                    return true;
+                }
+            }
+        }
+        m_xpos += g_walkDir(g_rng);
+        m_ypos += g_walkDir(g_rng);
+    }
+    std::cout<<"Out of Range "<<m_xpos<<' '<<m_xpos<<'\n';
+    return false;
 }
 
 void Walker::resetStart()
