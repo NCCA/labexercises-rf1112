@@ -18,6 +18,8 @@ int main(int argc, char **argv)
     ("e,ext", "image file extension", cxxopts::value<std::string>()->default_value("exr"))
     ("t,imageStep", "how many steps before saving an image", cxxopts::value<int>()->default_value("100"))
     ("s,seeds", "number of seeds", cxxopts::value<int>()->default_value("10"))
+    ("c,colour", "enable colour")
+    ("r,reverse", "reverse colour")
     ("u,help", "Print usage");
 
     auto results = options.parse(argc, argv);
@@ -34,6 +36,8 @@ int main(int argc, char **argv)
     auto ext=results["ext"].as<std::string>();
     auto imageStep=results["imageStep"].as<int>();
     auto seeds=results["seeds"].as<int>();
+    auto colour=results["colour"].as<bool>();
+    auto reverse=results["reverse"].as<bool>();
 
     std::cout<<"DLA\n";
     Walker w(width,height);
@@ -46,13 +50,12 @@ int main(int argc, char **argv)
     for(int i=0; i<iterations; ++i)
     {
         w.resetStart();
-        if(w.walk() == true)
+        if(w.walk(iterations, colour, reverse) == true)
         {
             if(!(simCount++ %imageStep))
                 w.saveImage(fmt::format("{}{}{:04d}.{}", path, filename, imageIndex++, ext));
         }
     }
-
-    // w.saveImage("test.exr");
+    w.saveImage(fmt::format("../images/{}.jpg", filename));
     return EXIT_SUCCESS;
 }

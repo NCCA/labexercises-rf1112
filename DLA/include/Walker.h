@@ -13,7 +13,7 @@ class Walker
         void setImageSeed(size_t _x, size_t _y);
         void saveImage(const std::string &_fname) const;
         void randomImageSeed();
-        bool walk();
+        bool walk(int iterations, bool c, bool r);
         void resetStart();
     
     private:
@@ -23,7 +23,7 @@ class Walker
         std::uniform_int_distribution<> m_xRand;
         std::uniform_int_distribution<> m_yRand;
         void initRNG();
-
+        int m_i;
 };
 
 #endif
