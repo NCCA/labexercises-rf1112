@@ -9,7 +9,7 @@ endif()
 project(DLA_build)
 find_package(OpenImageIO CONFIG REQUIRED)
 find_package(OpenMP)
-
+find_package(cxxopts CONFIG REQUIRED)
 
 # Here we set the C++ standard to use
 set(CMAKE_CXX_STANDARD 17)
@@ -18,6 +18,6 @@ include_directories(include)
 # Now we add our target executable and the file it is built from.
 add_executable(DLA)
 target_sources(DLA PRIVATE src/main.cpp src/Image.cpp include/Image.h src/Walker.cpp include/Walker.h)
-target_link_libraries(DLA PRIVATE OpenImageIO::OpenImageIO OpenImageIO::OpenImageIO_Util OpenMP::OpenMP_CXX)
+target_link_libraries(DLA PRIVATE OpenImageIO::OpenImageIO OpenImageIO::OpenImageIO_Util OpenMP::OpenMP_CXX cxxopts::cxxopts)
 
 add_compile_options(-Wall -Wextra ) #-pedantic)
