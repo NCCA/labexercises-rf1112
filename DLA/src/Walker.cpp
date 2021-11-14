@@ -36,7 +36,7 @@ void Walker::randomImageSeed()
 
 bool Walker::walk(int iterations, bool c=false, bool r=false)
 {
-    while (m_xpos>0 && m_xpos<m_map->width() && m_ypos>0 && m_ypos<m_map->height())
+    while (m_xpos>0 && m_xpos<m_map->width()-1 && m_ypos>0 && m_ypos<m_map->height()-1)
     {
         // std::cout<<"Walk "<<m_xpos<<' '<<m_ypos<<'\n';
         for(int i=-1; i<=1; ++i)

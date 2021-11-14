@@ -18,6 +18,7 @@ int main(int argc, char **argv)
     ("e,ext", "image file extension", cxxopts::value<std::string>()->default_value("exr"))
     ("t,imageStep", "how many steps before saving an image", cxxopts::value<int>()->default_value("100"))
     ("s,seeds", "number of seeds", cxxopts::value<int>()->default_value("10"))
+    ("l,seedPos", "Seeds position (top, bottom, left, right)", cxxopts::value<std::string>()->default_value(""))
     ("c,colour", "enable colour")
     ("r,reverse", "reverse colour")
     ("u,help", "Print usage");
@@ -38,13 +39,36 @@ int main(int argc, char **argv)
     auto seeds=results["seeds"].as<int>();
     auto colour=results["colour"].as<bool>();
     auto reverse=results["reverse"].as<bool>();
+    auto seedPos=results["seedPos"].as<std::string>();
 
     std::cout<<"DLA\n";
     Walker w(width,height);
     // w.setImageSeed(0,0);
-    for(int i=0; i<seeds; ++i)
-        w.randomImageSeed();
-    
+    if(seedPos.compare("top") == 0)
+    {
+        for(int i=0; i<width; ++i)
+            w.setImageSeed(i, 0);
+    }
+    else if(seedPos.compare("bottom") == 0)
+    {
+        for(int i=0; i<width; ++i)
+            w.setImageSeed(i, height-1);
+    }
+    else if(seedPos.compare("left") == 0)
+    {
+        for(int i=0; i<height; ++i)
+            w.setImageSeed(0, i);
+    }
+    else if(seedPos.compare("right") == 0)
+    {
+        for(int i=0; i<width; ++i)
+            w.setImageSeed(width-1, i);
+    }
+    else
+    {
+        for(int i=0; i<seeds; ++i)
+            w.randomImageSeed();
+    }   
     int simCount = 0;
     int imageIndex = 0;
     for(int i=0; i<iterations; ++i)
