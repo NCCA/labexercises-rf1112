@@ -12,6 +12,7 @@ class Emitter
         void update();
         void render() const;
         size_t numParticles() const;
+        void saveFrame(int _frameNo) const;
 
     private:
         std::vector<Particle> m_particles;

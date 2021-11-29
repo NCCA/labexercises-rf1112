@@ -13,6 +13,7 @@ struct Particle
     Vec3 colour;
     float size = 1.0f;
     int life = 0;
+    int maxLife = 50;
 };
 
 #endif
