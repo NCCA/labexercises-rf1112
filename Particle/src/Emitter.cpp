@@ -5,14 +5,13 @@
 #include <sstream>
 #include <fmt/format.h>
 
-Emitter::Emitter(size_t _numParticles)
+Emitter::Emitter(size_t _numParticles, const Vec3 &_emitDir)
 {
-    Particle p;
-    for(size_t i=0; i<_numParticles; ++i)
+    m_particles.resize(_numParticles);
+    m_emitDir = _emitDir;
+    for(auto &p :m_particles)
     {
-        p.dir = m_emitDir * Random::randomPositiveFloat() + Random::randomVectorOnSphere() * m_spread;
-        p.dir.y = std::abs(p.dir.y);
-        m_particles.push_back(p);
+        resetParticle(p);
     }
 }
 
@@ -24,15 +23,15 @@ size_t Emitter::numParticles() const
 void Emitter::update()
 {
     float dt = 0.1f;
-    const Vec3 gravity(0.0f, -9.8f, 0.0f);
+    const Vec3 gravity(0.0f, -9.81f, 0.0f);
     for(auto &p : m_particles)
     {
         p.dir += gravity * dt * 0.5f;
         p.pos += p.dir * dt;
         p.size += Random::randomPositiveFloat(0.05f);
-        if(++p.life >= p.maxLife)
+        if(++p.life >= p.maxLife || p.pos.y <= 0.0f)
         {
-            p.pos = Vec3(0,0,0);
+            resetParticle(p);
         }
     }
 
@@ -78,4 +77,26 @@ void Emitter::saveFrame(int _frameNo) const
     ss << "endExtra\n";
     file<<ss.rdbuf();
     file.close();
+}
+
+void Emitter::resetParticle(Particle &io_p)
+{
+    if(Random::randomPositiveFloat(500)> 450)
+    {
+        io_p.pos ={0, 0, 0};
+        io_p.dir = m_emitDir * Random::randomPositiveFloat() + Random::randomVectorOnSphere() * m_spread;
+        io_p.dir.y = std::abs(io_p.dir.y);
+        io_p.colour = Random::randomPositiveVec3();
+        io_p.maxLife = static_cast<int>(Random::randomPositiveFloat(5000)+100);
+        io_p.life = 0;
+        io_p.size = 0.01f;
+    }
+    else
+    {
+        io_p.dir ={0, 0, 0};
+        io_p.pos ={0, 0, 0};
+        io_p.maxLife = 100;
+        io_p.life = 0;
+        io_p.size = 0;
+    }
 }
