@@ -2,7 +2,7 @@
 
 layout (location = 0) out vec4 fragColour;
 
-uniform vec3 colour;
+in vec3 colour;
 
 void main()
 {

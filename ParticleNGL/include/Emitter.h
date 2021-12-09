@@ -2,6 +2,9 @@
 #define EMITTER_H_
 #include <vector>
 #include "Particle.h"
+#include <ngl/Vec3.h>
+#include <ngl/SimpleVAO.h>
+#include <memory>
 
 class Emitter
 {
@@ -19,6 +22,7 @@ class Emitter
         ngl::Vec3 m_emitDir = {0.0f, 1.0f, 0.0f};
         float m_spread = 2.0f;
         void resetParticle(Particle &io_p);
+        std::unique_ptr<ngl::AbstractVAO> m_vao;
 };
 
 #endif
