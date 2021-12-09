@@ -43,17 +43,25 @@ void NGLScene::initializeGL()
   glEnable(GL_MULTISAMPLE);
   ngl::ShaderLib::loadShader(ColourShader, "shaders/ColourVertex.glsl", "shaders/ColourFragment.glsl");
   ngl::ShaderLib::use(ColourShader);
+  m_emitter = std::make_unique<Emitter>(10000, ngl::Vec3(0,10,0));
+  startTimer(10);
+  ngl::VAOPrimitives::createSphere("sphere",0.1f,20);
 
 }
 
-
+void NGLScene::timerEvent ( QTimerEvent *_event)
+{
+  m_emitter->update();
+  update();
+}
 
 void NGLScene::paintGL()
 {
   // clear the screen and depth buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0,0,m_win.width,m_win.height);
-  ngl::VAOPrimitives::draw(ngl::teapot);
+  // ngl::VAOPrimitives::draw("sphere");
+  m_emitter->render();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

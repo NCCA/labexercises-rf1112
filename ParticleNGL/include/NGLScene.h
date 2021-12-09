@@ -1,6 +1,8 @@
 #ifndef NGLSCENE_H_
 #define NGLSCENE_H_
 #include <ngl/Vec3.h>
+#include <memory>
+#include "Emitter.h"
 #include "WindowParams.h"
 // this must be included after NGL includes else we get a clash with gl libs
 #include <QOpenGLWindow>
@@ -68,6 +70,8 @@ private:
     //----------------------------------------------------------------------------------------------------------------------
     void mouseReleaseEvent ( QMouseEvent *_event ) override;
 
+    void timerEvent ( QTimerEvent *_event) override;
+
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief this method is called everytime the mouse wheel is moved
     /// inherited from QObject and overridden here.
@@ -78,6 +82,8 @@ private:
     WinParams m_win;
     /// position for our model
     ngl::Vec3 m_modelPos;
+
+    std::unique_ptr<Emitter> m_emitter;
 
 };
 
