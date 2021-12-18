@@ -5,16 +5,18 @@
 #include <ngl/NGLInit.h>
 #include <ngl/VAOPrimitives.h>
 #include <ngl/ShaderLib.h>
-#include <ngl/Util.h>
 #include <iostream>
 
 
-NGLScene::NGLScene()
+NGLScene::NGLScene(QWidget *_parent) :QOpenGLWidget(_parent)
 {
-  // re-size the widget to that of the parent (in this case the GLFrame passed in on construction)
-  setTitle("Particle NGL");
+
 }
 
+void NGLScene::changeNumberOfParticles(int _num)
+{
+  m_emitter->changeNumberParticles(_num);
+}
 
 NGLScene::~NGLScene()
 {
@@ -27,7 +29,6 @@ void NGLScene::resizeGL(int _w , int _h)
 {
   m_win.width  = static_cast<int>( _w * devicePixelRatio() );
   m_win.height = static_cast<int>( _h * devicePixelRatio() );
-  m_project = ngl::perspective(45.0f,static_cast<float>(_w)/_h,0.1f,1000.0f);
 }
 
 const auto ColourShader = "ColourShader";
@@ -48,7 +49,7 @@ void NGLScene::initializeGL()
   m_emitter = std::make_unique<Emitter>(1000000, ngl::Vec3(0,10,0));
   startTimer(10);
   ngl::VAOPrimitives::createSphere("sphere",0.1f,20);
-  m_view = ngl::lookAt({10,10,10},{0,0,0},{0,1,0});
+
 }
 
 void NGLScene::timerEvent ( QTimerEvent *_event)
@@ -62,18 +63,7 @@ void NGLScene::paintGL()
   // clear the screen and depth buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0,0,m_win.width,m_win.height);
-
-  ngl::Mat4 rotX;
-  ngl::Mat4 rotY;
-  rotX.rotateX(m_win.spinXFace);
-  rotY.rotateY(m_win.spinYFace);
-  m_mouseGlobalTX = rotX*rotY;
-  m_mouseGlobalTX.m_m[3][0] = m_modelPos.m_x;
-  m_mouseGlobalTX.m_m[3][1] = m_modelPos.m_y;
-  m_mouseGlobalTX.m_m[3][2] = m_modelPos.m_z;
-
-  ngl::ShaderLib::use(ColourShader);
-  ngl::ShaderLib::setUniform("MVP",m_project*m_view*m_mouseGlobalTX);
+  // ngl::VAOPrimitives::draw("sphere");
   m_emitter->render();
 }
 
@@ -93,10 +83,6 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
       m_modelPos.set(ngl::Vec3::zero());
 
   break;
-  case Qt::Key_Left : m_emitter->updatePos(-0.1f,0.0f,0.0f); break;
-  case Qt::Key_Right : m_emitter->updatePos(0.1f,0.0f,0.0f); break;
-  case Qt::Key_Up : m_emitter->updatePos(0.0f,0.0f,0.1f); break;
-  case Qt::Key_Down : m_emitter->updatePos(0.0f,0.0f,-0.1f); break;
   default : break;
   }
   // finally update the GLWindow and re-draw

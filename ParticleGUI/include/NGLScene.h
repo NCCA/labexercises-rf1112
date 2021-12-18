@@ -1,12 +1,11 @@
 #ifndef NGLSCENE_H_
 #define NGLSCENE_H_
 #include <ngl/Vec3.h>
-#include <ngl/Mat4.h>
 #include <memory>
 #include "Emitter.h"
 #include "WindowParams.h"
 // this must be included after NGL includes else we get a clash with gl libs
-#include <QOpenGLWindow>
+#include <QOpenGLWidget>
 //----------------------------------------------------------------------------------------------------------------------
 /// @file NGLScene.h
 /// @brief this class inherits from the Qt OpenGLWindow and allows us to use NGL to draw OpenGL
@@ -20,14 +19,15 @@
 /// put in this file
 //----------------------------------------------------------------------------------------------------------------------
 
-class NGLScene : public QOpenGLWindow
+class NGLScene : public QOpenGLWidget
 {
+  Q_OBJECT
   public:
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief ctor for our NGL drawing class
     /// @param [in] parent the parent window to the class
     //----------------------------------------------------------------------------------------------------------------------
-    NGLScene();
+    NGLScene(QWidget *_parent);
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief dtor must close down ngl and release OpenGL resources
     //----------------------------------------------------------------------------------------------------------------------
@@ -45,6 +45,9 @@ class NGLScene : public QOpenGLWindow
     /// @brief this is called everytime we resize the window
     //----------------------------------------------------------------------------------------------------------------------
     void resizeGL(int _w, int _h) override;
+
+public slots :
+    void changeNumberOfParticles(int _num);
 
 private:
 
@@ -85,9 +88,7 @@ private:
     ngl::Vec3 m_modelPos;
 
     std::unique_ptr<Emitter> m_emitter;
-    ngl::Mat4 m_view;
-    ngl::Mat4 m_project;
-    ngl::Mat4 m_mouseGlobalTX;
+
 };
 
 
